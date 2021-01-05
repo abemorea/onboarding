@@ -1,4 +1,6 @@
-const express = require('express');
+//const express = require('express');
+const restify = require('restify');
+const { Router } = require('restify-router');
 const { MongoClient } = require('mongodb');
 const routes = require('./routes');
 
@@ -20,8 +22,33 @@ const routes = require('./routes');
         console.log(err);
         process.exit(1);
     }
+
+    const server = restify.createServer();
+
+    server.use((req, res, next) => {
+        req.mongo = mongoClient;
+        next();
+    });
+    server.use(restify.plugins.bodyParser());
+    const router = routes;
+    router.applyRoutes(server);
+
+    /*server.get('/', (req, res, next) => {
+        console.log(this);
+        res.send('HOME');
+        next();
+    });*/
+
+
+    const port = process.env.PORT || 3000;
+
+    server.listen(port, () => {
+        console.log(`Listening on port ${port}...`);
+    });
+
+
     
-    const app = express();
+    /*const app = express();
 
     app.locals.mongo = mongoClient;
 
@@ -33,6 +60,6 @@ const routes = require('./routes');
     
     app.listen(port, () => {
         console.log(`Listening on port ${port}...`);
-    });
+    });*/
 
 })();
