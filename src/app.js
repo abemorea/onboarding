@@ -7,7 +7,8 @@ const routes = require('./routes');
 
 (async function () {
 
-    const mongoURI = 'mongodb://127.0.0.1:27017/';
+    const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/';
+    console.log('MONGO URI:', mongoURI);
     const mongoClient = new MongoClient(mongoURI, { useUnifiedTopology:true });
     try {
         await mongoClient.connect();
