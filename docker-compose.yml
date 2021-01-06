@@ -5,11 +5,13 @@ services:
     ports:
       - "3000:3000"
     environment:
-      MONGO_URI: mongodb://mongo:27017/
+      MONGO_URI: mongodb://mongo:27018/
     links:
       - mongo
   mongo:
     image: mongo
+    user: "${UID}:${UID}"
     restart: always
+    command: mongod --port 27018
     volumes:
-      - ./data:/data
+      - ./data/mongodb:/data/db
